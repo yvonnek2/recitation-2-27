@@ -85,3 +85,14 @@ TEST_CASE("Example: Print Prompt Ledger", "[ex-3]") {
   atm.PrintLedger("./prompt.txt", 12345678, 1234);
   REQUIRE(CompareFiles("./ex-1.txt", "./prompt.txt"));
 }
+
+TEST_CASE("Example: Simple deposit", "[ex-4]") {
+  Atm atm;
+  atm.RegisterAccount(12345678, 1234, "Sam Sepiol", 300.30);
+  atm.DepositCash(12345678, 1234, 20);
+  auto accounts = atm.GetAccounts();
+  Account sam_account = accounts[{12345678, 1234}];
+  REQUIRE_THROWS_AS(atm.DepositCash(12945578, 1934, 20), std::invalid_argument);
+  REQUIRE_THROWS_AS(atm.DepositCash(12345678, 1234, -20),
+                    std::invalid_argument);
+}
